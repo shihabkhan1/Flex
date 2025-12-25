@@ -2,15 +2,19 @@
   <div>
     <a href="{{ SITEURL }}/">
       {% if SITELOGO %}
-      <img src="{{ SITELOGO }}" alt="{{ SITETITLE }}" title="{{ SITETITLE }}">
+      <picture>
+        <source srcset="{{ SITEURL }}/images/shihab-bio-140.webp 1x, {{ SITEURL }}/images/shihab-bio-280.webp 2x" type="image/webp">
+        <source srcset="{{ SITEURL }}/images/shihab-bio-140.jpg 1x, {{ SITEURL }}/images/shihab-bio-280.jpg 2x" type="image/jpeg">
+        <img src="{{ SITELOGO }}" alt="{{ SITETITLE }}" title="{{ SITETITLE }}" width="140" height="140">
+      </picture>
       {% else %}
       <img src="{{ SITEURL }}/{{ THEME_STATIC_DIR }}/img/profile.png" alt="{{ SITETITLE }}" title="{{ SITETITLE }}">
       {% endif %}
     </a>
 
-    <h1>
+    <div class="site-title">
       <a href="{{ SITEURL }}/">{{ SITETITLE }}</a>
-    </h1>
+    </div>
 
     {% if SITESUBTITLE %}
     <p>{{ SITESUBTITLE }}</p>
@@ -68,7 +72,7 @@
     {% endif %}
 
     {% if SOCIAL %}
-    {% set solid = ['at', 'envelope', 'mailbox', 'rss'] %}
+    {% set solid = ['at', 'envelope', 'mailbox', 'rss', 'graduation-cap'] %}
     {% set relme = ['at', 'envelope', 'mailbox', 'mastodon'] %}
     <ul class="social">
       {% for name, link in SOCIAL %}

@@ -32,6 +32,14 @@
 
       {% if PLUGINS and 'post_stats' in PLUGINS %}
         &#8226; {{ _('%(minutes)s min read', minutes=article.stats['read_mins']) }}
+      {% else %}
+      {# Calculate reading time: word count / 200 wpm #}
+      {% set word_count = article.content|striptags|wordcount %}
+      {% set read_time = (word_count / 200)|round|int %}
+      {% if read_time < 1 %}{% set read_time = 1 %}{% endif %}
+      <span class="reading-time">
+        &bull; {{ read_time }} min read
+      </span>
       {% endif %}
     </p>
   </header>

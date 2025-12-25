@@ -1,0 +1,151 @@
+{# Blog Filter Bar - Comprehensive navigation for filtering posts #}
+<nav class="blog-filters" aria-label="Blog navigation and filters">
+  <div class="blog-filters-container">
+
+    {# Search Input (works with Stork if enabled) #}
+    {% if 'pelican.plugins.search' in PLUGINS %}
+    <div class="filter-item filter-search">
+      <div class="stork-wrapper" data-stork="sitesearch">
+        <input data-stork="sitesearch-input" class="filter-search-input" type="search" placeholder="Search posts..." aria-label="Search blog posts">
+        <div data-stork="sitesearch-output" class="stork-output"></div>
+      </div>
+    </div>
+    {% else %}
+    <div class="filter-item filter-search filter-search-placeholder">
+      <span class="filter-icon">&#128269;</span>
+      <span class="filter-label">Search</span>
+    </div>
+    {% endif %}
+
+    {# Categories Dropdown #}
+    <div class="filter-item filter-dropdown">
+      <button class="filter-dropdown-btn" aria-haspopup="true" aria-expanded="false">
+        <span class="filter-label">Categories</span>
+        <span class="filter-arrow">&#9662;</span>
+      </button>
+      <ul class="filter-dropdown-menu" role="menu">
+        {% for cat, articles in categories %}
+        <li role="menuitem">
+          <a href="{{ SITEURL }}/{{ cat.url }}">
+            {{ cat }} <span class="filter-count">({{ articles|count }})</span>
+          </a>
+        </li>
+        {% endfor %}
+        <li role="menuitem" class="filter-divider"></li>
+        <li role="menuitem">
+          <a href="{{ SITEURL }}/categories.html">All Categories</a>
+        </li>
+      </ul>
+    </div>
+
+    {# Tags Dropdown #}
+    <div class="filter-item filter-dropdown">
+      <button class="filter-dropdown-btn" aria-haspopup="true" aria-expanded="false">
+        <span class="filter-label">Tags</span>
+        <span class="filter-arrow">&#9662;</span>
+      </button>
+      <ul class="filter-dropdown-menu filter-dropdown-tags" role="menu">
+        {% for tag, articles in tags|sort(attribute='0.name') %}
+        {% if loop.index <= 10 %}
+        <li role="menuitem">
+          <a href="{{ SITEURL }}/{{ tag.url }}">
+            {{ tag }} <span class="filter-count">({{ articles|count }})</span>
+          </a>
+        </li>
+        {% endif %}
+        {% endfor %}
+        {% if tags|count > 10 %}
+        <li role="menuitem" class="filter-divider"></li>
+        {% endif %}
+        <li role="menuitem">
+          <a href="{{ SITEURL }}/tags.html">All Tags</a>
+        </li>
+      </ul>
+    </div>
+
+    {# Year/Archives Dropdown #}
+    <div class="filter-item filter-dropdown">
+      <button class="filter-dropdown-btn" aria-haspopup="true" aria-expanded="false">
+        <span class="filter-label">Archives</span>
+        <span class="filter-arrow">&#9662;</span>
+      </button>
+      <ul class="filter-dropdown-menu" role="menu">
+        {% if dates %}
+        {% set years_seen = [] %}
+        {% for article in dates %}
+          {% set year = article.date.strftime('%Y') %}
+          {% if year not in years_seen %}
+            {% if years_seen.append(year) %}{% endif %}
+            <li role="menuitem">
+              <a href="{{ SITEURL }}/archives.html#{{ year }}">{{ year }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+        <li role="menuitem" class="filter-divider"></li>
+        {% endif %}
+        <li role="menuitem">
+          <a href="{{ SITEURL }}/archives.html">Full Archives</a>
+        </li>
+      </ul>
+    </div>
+
+    {# All Posts Button #}
+    <div class="filter-item">
+      <a href="{{ SITEURL }}/blog/" class="filter-btn filter-btn-all">
+        All Posts
+      </a>
+    </div>
+
+  </div>
+</nav>
+
+<script>
+(function() {
+  // Dropdown toggle functionality
+  document.querySelectorAll('.filter-dropdown-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var dropdown = this.parentElement;
+      var isExpanded = dropdown.classList.contains('active');
+
+      // Close all other dropdowns
+      document.querySelectorAll('.filter-dropdown.active').forEach(function(d) {
+        d.classList.remove('active');
+        d.querySelector('.filter-dropdown-btn').setAttribute('aria-expanded', 'false');
+      });
+
+      // Toggle current dropdown
+      if (!isExpanded) {
+        dropdown.classList.add('active');
+        this.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  // Close dropdowns when clicking outside
+  document.addEventListener('click', function() {
+    document.querySelectorAll('.filter-dropdown.active').forEach(function(d) {
+      d.classList.remove('active');
+      d.querySelector('.filter-dropdown-btn').setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Keyboard navigation
+  document.querySelectorAll('.filter-dropdown-btn').forEach(function(btn) {
+    btn.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        this.click();
+      } else if (e.key === 'Escape') {
+        this.parentElement.classList.remove('active');
+        this.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+
+  // Initialize Stork search if available
+  if (typeof window.loadStorkIndex === 'function') {
+    window.loadStorkIndex();
+  }
+})();
+</script>

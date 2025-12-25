@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %} - Home{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <picture>
+      <source srcset="{{ SITEURL }}/images/shihab-bio-200.webp 1x, {{ SITEURL }}/images/shihab-bio-400.webp 2x" type="image/webp">
+      <source srcset="{{ SITEURL }}/images/shihab-bio-200.jpg 1x, {{ SITEURL }}/images/shihab-bio-400.jpg 2x" type="image/jpeg">
+      <img src="{{ SITEURL }}/images/shihab-bio-zoom.jpg" alt="Shihab Khan" class="hero-image" width="200" height="200" loading="eager" fetchpriority="high">
+    </picture>
+    <h1>Dr. Shihab Khan</h1>
+    <p class="hero-subtitle">Machine Learning Scientist | Python Developer | Open Source Contributor</p>
+    <p class="hero-description">
+        I love solving hard problems leveraging Machine Learning and Software Engineering!
+    </p>
+    <div class="cta-buttons">
+        <a href="{{ SITEURL }}/contact.html" class="btn-primary">Get In Touch</a>
+        <a href="{{ SITEURL }}/cv.html" class="btn-secondary">View CV</a>
+    </div>
+</section>
+
+<!-- Featured Projects Section -->
+<section class="featured-projects">
+    <h2>Featured Projects</h2>
+    <div class="projects-grid">
+        {% if FEATURED_PROJECTS %}
+        {% for project in FEATURED_PROJECTS %}
+        <div class="project-card">
+            <h3>
+                <a href="{{ SITEURL }}/{{ project.slug }}.html">{{ project.title }}</a>
+            </h3>
+            <p>{{ project.description }}</p>
+            <div class="project-tags">
+                {% for tag in project.tags %}
+                <span>{{ tag }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+    <div class="view-all-link">
+        <a href="{{ SITEURL }}/projects.html">View All Projects &rarr;</a>
+    </div>
+</section>
+
+<!-- Recent Blog Posts Section -->
+<section class="recent-posts">
+    <h2>Recent Blog Posts</h2>
+    <div class="posts-list">
+        {% if articles %}
+        {% for article in articles[:3] %}
+        <article>
+            <h3>
+                <a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a>
+            </h3>
+            <div class="post-meta">
+                <time>{{ article.locale_date }}</time>
+                {% if article.category %}
+                &bull; <a href="{{ SITEURL }}/{{ article.category.url }}">{{ article.category }}</a>
+                {% endif %}
+            </div>
+            {% if article.summary %}
+            <p>{{ article.summary }}</p>
+            {% endif %}
+        </article>
+        {% endfor %}
+        {% else %}
+        <p class="no-posts">No blog posts yet. Check back soon!</p>
+        {% endif %}
+    </div>
+    <div class="view-all-link">
+        <a href="{{ SITEURL }}/blog/">Read All Blog Posts &rarr;</a>
+    </div>
+</section>
+
+<!-- Connect Section -->
+<section class="connect-section">
+    <h2>Let's Connect</h2>
+    <p>I'm always interested in new opportunities and collaborations.</p>
+    <div class="social-links">
+        {% if SOCIAL %}
+        {% set solid = ['at', 'envelope', 'mailbox', 'rss', 'graduation-cap'] %}
+        {% for name, link in SOCIAL %}
+        <a href="{{ link }}" target="_blank" rel="noopener" title="{{ name|title }}">
+            <i class="{% if name in solid %}fa-solid{% else %}fa-brands{% endif %} fa-{{ name }}"></i>
+        </a>
+        {% endfor %}
+        {% endif %}
+    </div>
+    <div class="email-cta">
+        <a href="mailto:shihabkhan1@gmail.com">
+            <i class="fa fa-envelope"></i> Send Me an Email
+        </a>
+    </div>
+</section>
+{% endblock %}

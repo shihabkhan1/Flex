@@ -2,6 +2,8 @@
 
 {% block content %}
 
+{% include "partial/blog-filters.html" %}
+
 {% if GOOGLE_ADSENSE and GOOGLE_ADSENSE.ads.index_top %}
   <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
   <ins class="adsbygoogle ads-responsive"
@@ -36,7 +38,7 @@
   <div>
     {% if summarise or article.metadata['summary'] or SUMMARY_MAX_LENGTH %}
       {% if  article.featured_image %}
-        <img src="{{ article.featured_image }}">
+        <img src="{{ article.featured_image }}" alt="{{ article.title }}" loading="lazy">
       {% endif %}
       <div>{{ article.summary }}</div>
       {% if article.content != article.summary %}

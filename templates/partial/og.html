@@ -5,12 +5,27 @@
     {% set default_locale = 'en_US' %}
   {% endif %}
   <meta property="og:site_name" content="{{ SITENAME }}"/>
-  <meta property="og:type" content="blog"/>
-  <meta property="og:title" content="{{ SITENAME }}"/>
-  <meta property="og:description" content="{{ SITEDESCRIPTION }}"/>
-  <meta property="og:locale" content="{{ default_locale }}"/>
-  <meta property="og:url" content="{{ SITEURL }}"/>
-  {% if SITELOGO %}
-  <meta property="og:image" content="{{ SITELOGO }}">
+  {% if article %}
+    <meta property="og:type" content="article"/>
+    <meta property="og:title" content="{{ article.title|striptags|e }}"/>
+    <meta property="og:description" content="{{ article.summary|striptags|e if article.summary else SITEDESCRIPTION }}"/>
+    <meta property="og:url" content="{{ SITEURL }}/{{ article.url }}"/>
+  {% elif page %}
+    <meta property="og:type" content="website"/>
+    <meta property="og:title" content="{{ page.title|striptags|e }}"/>
+    <meta property="og:description" content="{{ page.summary|striptags|e if page.summary else SITEDESCRIPTION }}"/>
+    <meta property="og:url" content="{{ SITEURL }}/{{ page.url }}"/>
+  {% else %}
+    <meta property="og:type" content="website"/>
+    <meta property="og:title" content="{{ SITENAME }}"/>
+    <meta property="og:description" content="{{ SITEDESCRIPTION }}"/>
+    <meta property="og:url" content="{{ SITEURL }}"/>
   {% endif %}
+  <meta property="og:locale" content="{{ default_locale }}"/>
+  {% if SITELOGO %}
+  <meta property="og:image" content="{{ SITEURL }}/{{ SITELOGO }}">
+  {% endif %}
+  <meta name="twitter:card" content="summary"/>
+  <meta name="twitter:title" content="{{ page.title|striptags|e if page else (article.title|striptags|e if article else SITENAME) }}"/>
+  <meta name="twitter:description" content="{{ (page.summary|striptags|e if page.summary else SITEDESCRIPTION) if page else ((article.summary|striptags|e if article.summary else SITEDESCRIPTION) if article else SITEDESCRIPTION) }}"/>
 {% endif %}

@@ -133,7 +133,13 @@
 
   {% block meta %}
     <meta name="author" content="{{ AUTHOR }}" />
+    {% if page and page.summary %}
+    <meta name="description" content="{{ page.summary|striptags|e }}" />
+    {% elif article and article.summary %}
+    <meta name="description" content="{{ article.summary|striptags|e }}" />
+    {% else %}
     <meta name="description" content="{{ SITEDESCRIPTION }}" />
+    {% endif %}
     {% include "partial/og.html" %}
   {% endblock %}
 
@@ -151,6 +157,25 @@
 
   {% include "partial/gtm.html" %}
   {% include "partial/clarity.html" %}
+
+  <!-- MathJax Configuration for Dollar Sign Math -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        displayMath: [['$$','$$'], ['\\[','\\]']],
+        processEscapes: true
+      },
+      "HTML-CSS": {
+        styles: {
+          ".MathJax .mo, .MathJax .mi": {color: "inherit !important"}
+        }
+      }
+    });
+  </script>
+  <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+  </script>
 </head>
 <body {% if not THEME_COLOR_AUTO_DETECT_BROWSER_PREFERENCE %}class="{{ THEME_COLOR|default('light') }}-theme"{% endif %}>
   {% include "partial/gtm_noscript.html" %}
@@ -183,6 +208,55 @@
   {% include 'partial/github.html' %}
   {% include 'partial/stork.html' %}
   {% include 'partial/cf_analytics.html' %}
+
+  <!-- Scroll to Top Button -->
+  <button class="scroll-to-top" id="scrollToTop" aria-label="Scroll to top" title="Scroll to top">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 4l-8 8h5v8h6v-8h5z"/>
+    </svg>
+  </button>
+
+  <script>
+  (function() {
+    var scrollBtn = document.getElementById('scrollToTop');
+    if (!scrollBtn) return;
+
+    // Show/hide button based on scroll position
+    function toggleScrollBtn() {
+      if (window.scrollY > 300) {
+        scrollBtn.classList.add('visible');
+      } else {
+        scrollBtn.classList.remove('visible');
+      }
+    }
+
+    // Smooth scroll to top
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+
+    // Add event listeners
+    window.addEventListener('scroll', toggleScrollBtn, { passive: true });
+    scrollBtn.addEventListener('click', scrollToTop);
+
+    // Initial check
+    toggleScrollBtn();
+
+    // Mark lazy images as loaded when they complete loading
+    document.querySelectorAll('img[loading="lazy"]').forEach(function(img) {
+      if (img.complete) {
+        img.classList.add('loaded');
+      } else {
+        img.addEventListener('load', function() {
+          img.classList.add('loaded');
+        });
+      }
+    });
+  })();
+  </script>
 
   {% block additional_js %}{% endblock %}
 </body>

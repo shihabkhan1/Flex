@@ -1,9 +1,14 @@
 {% if MAIN_MENU %}
 <nav>
-  <a href="{{ SITEURL }}/">{{ _('Home') }}</a>
+  {% set current_path = output_file|default('') %}
+  <a href="{{ SITEURL }}/"{% if current_path == 'index.html' %} class="active"{% endif %}>{{ _('Home') }}</a>
 
   {% for title, link in MENUITEMS %}
-  <a href="{{ link }}">{{ _(title) }}</a>
+  {% set menu_path = link.lstrip('/') %}
+  {% set is_active = (menu_path in current_path) or
+                     (page and page.url and menu_path in page.url) or
+                     (article and 'blog' in menu_path and 'blog' in current_path) %}
+  <a href="{{ SITEURL }}{{ link }}"{% if is_active %} class="active"{% endif %}>{{ _(title) }}</a>
   {% endfor %}
 
   {% if FEED_ALL_ATOM %}
