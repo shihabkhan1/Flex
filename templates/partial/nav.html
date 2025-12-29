@@ -11,12 +11,6 @@
   <a href="{{ SITEURL }}{{ link }}"{% if is_active %} class="active"{% endif %}>{{ _(title) }}</a>
   {% endfor %}
 
-  {% if FEED_ALL_ATOM %}
-  <a href="{{ FEED_DOMAIN }}/{{ FEED_ALL_ATOM }}">{{ _('Atom') }}</a>
-  {% endif %}
-
-  {% if FEED_ALL_RSS %}
-  <a href="{{ FEED_DOMAIN }}/{{ FEED_ALL_RSS }}">{{ _('RSS') }}</a>
-  {% endif %}
+  {# Feed links hidden from nav - feeds still available at /feeds/all.atom.xml #}
 </nav>
 {% endif %}
