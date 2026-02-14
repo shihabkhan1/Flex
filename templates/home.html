@@ -46,11 +46,24 @@
     </div>
 </section>
 
-<!-- Recent Blog Posts Section -->
+<!-- Featured Blog Posts Section -->
 <section class="recent-posts">
-    <h2>Recent Blog Posts</h2>
+    <h2>Featured Blog Posts</h2>
     <div class="posts-list">
-        {% if articles %}
+        {% if FEATURED_ARTICLES %}
+        {% for post in FEATURED_ARTICLES %}
+        <article>
+            <h3>
+                <a href="{{ SITEURL }}/blog/{{ post.slug }}.html">{{ post.title }}</a>
+            </h3>
+            <div class="post-meta">
+                <time>{{ post.date }}</time>
+                &bull; {{ post.category }}
+            </div>
+            <p>{{ post.summary }}</p>
+        </article>
+        {% endfor %}
+        {% elif articles %}
         {% for article in articles[:3] %}
         <article>
             <h3>
